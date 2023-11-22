@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        @media (max-width: 991px) {
+            #PremiumDiv {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<header id="navbar" class="bg-primary text-white text-center py-2">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navBeforeLogin">
+        <a class="navbar-brand" href="#">Expense Tracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav" id="ul">
+                <li class="nav-item">
+                    <a class="nav-link" href="/expense/MainHome" id="home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/expense/expenseMain" id="expense">Add Expenses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/expense/viewExpenses" id="view-expense">View Expenses</a>
+                </li>
+            </ul>
+            <div class="ml-auto" id="PremiumDiv">
+            </div>
+        </div>
+    </nav>
+</header>
+
+<body>
+    <div class="container mt-5 position-relative">
+        <div class="position-absolute top-0 end-0" id="div-alert"></div>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="mb-3 text-center">
+                    <button class="btn btn-primary mr-2" id="btnShowExpenseForm">Expense</button>
+                    <button class="btn btn-primary" id="btnShowIncomeForm">Income</button>
+                </div>
+                <form id="AddDataForm">
+                    <div id="DataDiv">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const form = document.getElementById('AddDataForm');
+    const expenseDiv = document.getElementById("DataDiv");
+    const expenseButton = document.getElementById("btnShowExpenseForm");
+    const incomeButton = document.getElementById("btnShowIncomeForm");
+    const updateData = JSON.parse(localStorage.getItem('updateData'));
+    function showExpenseForm(str) {
+        expenseDiv.innerHTML = `
+            <h2 class="mb-4 text-center">${str} Expense!</h2>
+                    <div class="mb-3">
+                        <label for="Amount" class="form-label">Expense Amount:</label>
+                        <input type="number" class="form-control" id="Amount" name="Amount" placeholder="Enter amount you have spent" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Desc" class="form-label">Description:</label>
+                        <textarea type="text" class="form-control" id="Desc" name="Desc" placeholder="Enter some Description about Expense done" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Type" class="form-label">Expense Type:</label>
+                        <select class="form-select" id="Type" name="Type" required>
+                            <option value="" disabled selected>Choose Expense Type</option>
+                            <option>Food</option>
+                            <option>Shopping</option>
+                            <option>Traveling</option>
+                            <option>Other Expenses</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" id="btnExpenseSubmit">Submit</button>
+                    </div>`;
+
+    }
+    function showIncomeForm(str) {
+        expenseDiv.innerHTML = `
+                <h2 class="mb-4 text-center">${str} Income!</h2>
+                <div class="mb-3">
+                    <label for="Amount" class="form-label">Income Amount:</label>
+                    <input type="number" class="form-control" id="Amount" name="Amount" placeholder="Enter Income amount" required>
+                </div>
+                <div class="mb-3">
+                    <label for="Desc" class="form-label">Description:</label>
+                    <textarea type="text" class="form-control" id="Desc" name="Desc" placeholder="Enter some Description about Income" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="Type" class="form-label">Income Type:</label>
+                    <select class="form-select" id="Type" name="Type" required>
+                        <option value="" disabled selected>Choose Income Type</option>
+                        <option>Salary</option>
+                        <option>Profit</option>
+                        <option>Other Income</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                        <button type="submit" class="btn btn-primary" id="btnIncomeSubmit">Submit</button>
+                    </div>`;
+    }
+    showExpenseForm('Add');
+    if (updateData) {
+        if (updateData.type == 'Expense') {
+            showExpenseForm('Update');
+        }
+        else if (updateData.type == 'Income') {
+            showIncomeForm('Update');
+        }
+    }
+    else {
+        expenseButton.addEventListener("click", function () {
+
+            showExpenseForm('Add');
+        });
+        incomeButton.addEventListener("click", function () {
+            showIncomeForm('Add');
+        });
+    }
+</script>
+<script src="/script.js"></script>
+<script src="/addExpenseScript.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
