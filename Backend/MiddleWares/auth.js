@@ -4,7 +4,7 @@ const authnticateUser = async (req, res, next) => {
     try {
         const token = req.header('Authorization');
         const user = jwt.verify(token, process.env.SECRETKEY);
-        const result = await userDb.findByPk(user.userid);
+        const result = await userDb.findById(user.userid);
         req.user = result;
         next();
     } catch (error) {

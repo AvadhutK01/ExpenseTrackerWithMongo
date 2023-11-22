@@ -53,7 +53,7 @@ exports.checkLogin = async (req, res) => {
         if (data) {
             const checkLogin = await bcrypt.compare(password, data.password);
             if (checkLogin) {
-                res.status(201).json({ message: 'success', token: generateAccessToken(data.id) });
+                res.status(201).json({ message: 'success', token: generateAccessToken(data._id) });
             } else {
                 res.status(401).json({ message: 'Failed' });
             }

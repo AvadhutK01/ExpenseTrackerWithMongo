@@ -1,9 +1,9 @@
 const express = require('express');
-// const authnticateUser = require('../MiddleWares/auth');
-// const moneyController = require('../Controllers/moneyController');
+const authnticateUser = require('../MiddleWares/auth');
+const moneyController = require('../Controllers/moneyController');
 const expenseRoutes = express.Router();
-// expenseRoutes.get('/MainHome', moneyController.getExpenseMainHomePage);
-// expenseRoutes.get('/expenseMain', moneyController.getExpenseMainPage);
+expenseRoutes.get('/MainHome', moneyController.getExpenseMainHomePage);
+expenseRoutes.get('/expenseMain', moneyController.getExpenseMainPage);
 // expenseRoutes.post('/post-expense', authnticateUser, moneyController.addExpense);
 // expenseRoutes.get('/viewExpenses', moneyController.getExpensesViewPage);
 // expenseRoutes.get('/viewExpensesData', authnticateUser, moneyController.getExpensesData);

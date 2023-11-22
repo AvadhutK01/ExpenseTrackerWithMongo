@@ -42,6 +42,6 @@ const UserSchema = new Schema({
         type: Number,
         default: 0,
         required: true
-    }
+    },
 })
 module.exports = mongoose.model('Users', UserSchema);
