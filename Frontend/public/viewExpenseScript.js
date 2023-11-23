@@ -30,13 +30,14 @@ async function fetchData(rowsPerPage, page) {
 
 async function displayData(data) {
     tabelbody.innerText = "";
+    console.log(data);
     if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
             let tr = document.createElement("tr");
             tr.setAttribute("data-id", data[i].id);
             let td1 = document.createElement("td");
             td1.id = "td1";
-            td1.appendChild(document.createTextNode(data[i].Amount));
+            td1.appendChild(document.createTextNode(data[i].Amount.$numberDecimal));
             tr.appendChild(td1);
             let td2 = document.createElement("td");
             td2.id = "td2";
@@ -54,7 +55,7 @@ async function displayData(data) {
             var delbutton = document.createElement('button');
             delbutton.className = "btn btn-danger btn-sm float-right m-0 delete";
             delbutton.addEventListener('click', () => {
-                deleteData(data[i].id, data[i].Amount, data[i].type);
+                deleteData(data[i]._id, data[i].Amount.$numberDecimal, data[i].type);
             });
             delbutton.appendChild(document.createTextNode("Delete"));
             let td6 = document.createElement("td");

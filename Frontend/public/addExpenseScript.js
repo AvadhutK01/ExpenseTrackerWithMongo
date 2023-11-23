@@ -13,7 +13,7 @@ if (updateData1) {
         let btnIncomeSubmit = document.getElementById('btnIncomeSubmit');
         btnIncomeSubmit.textContent = 'Update';
     }
-    Amount.value = updateData1.Amount;
+    Amount.value = updateData1.Amount.$numberDecimal;
     Desc.value = updateData1.description;
     Type.value = updateData1.sourceType;
 }
@@ -30,7 +30,7 @@ Dataform.addEventListener('submit', async function (e) {
                 Type: Type.value,
             };
             const token = localStorage.getItem('token');
-            const id = updateData1.id;
+            const id = updateData1._id;
             const Etype = updateData1.type
             let response = await axios.post('/expense/update-expense', { Etype, id, data }, {
                 headers: {
