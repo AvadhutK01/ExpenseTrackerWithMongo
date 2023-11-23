@@ -12,17 +12,17 @@ async function fetchData(Type) {
                 "Authorization": token
             }
         });
-        const currentDate = new Date();
-        const thisMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+        const currentDate = moment();
+        const thisMonthStart = moment().startOf('month');
 
         const monthlyData = result.data.filter(item => {
-            const [itemDay, itemMonth, itemYear] = item.date.split('/');
-            const itemDate = new Date(`${itemYear}/${itemMonth}/${itemDay}`);
-            return itemDate >= thisMonthStart;
+            const itemDate = moment(item.date, 'DD/MM/YYYY');
+            return itemDate.isSameOrAfter(thisMonthStart, 'day');
         });
-        const resultArray = formatData(monthlyData, Type)
-        displayGraph(resultArray, Type);
 
+        const resultArray = formatData(monthlyData, Type);
+        displayGraph(resultArray, Type);
     } catch (error) {
         await displayNotification("Internal Server Error!", 'danger', divAlert);
     }

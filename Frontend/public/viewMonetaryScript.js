@@ -41,41 +41,34 @@ async function fetchData() {
             }
         });
 
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('en-US');
-        const [month, day, year] = formattedDate.split('/');
-        const today = new Date(`${year}/${month}/${day}`);
+        const currentDate = moment();
+        const formattedDate = currentDate.format('L');
+        const today = moment(formattedDate, 'MM/DD/YYYY');
 
-        const startOfWeek = new Date(currentDate);
-        const dayOfWeek = currentDate.getDay();
-        const diff = currentDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
-        startOfWeek.setDate(diff);
-        const startOfWeekFormatted = new Date(`${startOfWeek.getFullYear()}/${startOfWeek.getMonth()}/${startOfWeek.getDate()}`)
-        const thisMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const startOfWeek = moment(currentDate).startOf('week');
+        const thisMonthStart = moment(currentDate).startOf('month');
 
         const dailyData = result.data.filter(item => {
-            const [itemDay, itemMonth, itemYear] = item.date.split('/');
-            const itemDate = new Date(`${itemYear}/${itemMonth}/${itemDay}`);
-            return itemDate.toDateString() === today.toDateString();
+            const itemDate = moment(item.date, 'DD/MM/YYYY');
+            return itemDate.isSame(today, 'day');
         });
 
         const weeklyData = result.data.filter(item => {
-            const [itemDay, itemMonth, itemYear] = item.date.split('/');
-            const itemDate = new Date(`${itemYear}/${itemMonth}/${itemDay}`);
-            return itemDate >= startOfWeekFormatted;
+            const itemDate = moment(item.date, 'DD/MM/YYYY');
+            return itemDate.isSameOrAfter(startOfWeek, 'day');
         });
 
         const monthlyData = result.data.filter(item => {
-            const [itemDay, itemMonth, itemYear] = item.date.split('/');
-            const itemDate = new Date(`${itemYear}/${itemMonth}/${itemDay}`);
-            return itemDate >= thisMonthStart;
+            const itemDate = moment(item.date, 'DD/MM/YYYY');
+            return itemDate.isSameOrAfter(thisMonthStart, 'day');
         });
 
-        const currentYear = new Date().getFullYear();
+        const currentYear = moment().year();
         const yearlyData = yearlyResult.data.filter(item => {
             const [itemMonth, itemYear] = item.year.split('-').map(Number);
             return itemYear === currentYear;
         });
+
 
         displayData(dailyData, table1, tablebody1, noDataDayContainer, dailyDataArray);
         displayData(weeklyData, table2, tablebody2, noDataWeekContainer, weeklyDataArray);

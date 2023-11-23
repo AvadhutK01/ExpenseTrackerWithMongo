@@ -3,7 +3,7 @@ const userDb = require('../Models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var SibApiV3Sdk = require('sib-api-v3-sdk');
-const { v4: uuidv4 } = require('uuid');
+const moment = require('moment');
 const forgetPasswordModel = require('../Models/forgetPasswordModel');
 
 exports.getRegistrationPage = (req, res) => {
@@ -20,7 +20,7 @@ exports.postRegistrationData = async (req, res) => {
     const phoneNo = body.phoneInput;
     const email = body.emailInput;
     const passwordInput = body.passwordInput;
-    const date = formatDate(new Date().toLocaleDateString());
+    const date = formatDate(moment().format('L'));
     try {
         const passWord = await bcrypt.hash(passwordInput, 10);
         const user = new userDb({
@@ -120,7 +120,7 @@ exports.getForgetPasswordPage = async (req, res) => {
 exports.updatePasswordData = async (req, res) => {
     const id = req.body.id;
     const password = req.body.password;
-    const date = formatDate(new Date().toLocaleDateString());
+    const date = formatDate(moment().format('L'));
     try {
         const response = await forgetPasswordModel.findOne({ _id: id });
         const userId = response.userId;
@@ -138,8 +138,6 @@ function generateAccessToken(id) {
 }
 
 function formatDate(currentDate) {
-    const [month, day, year] = currentDate.split('/');
-    const formattedDate = `${day}/${month}/${year}`;
-
+    const formattedDate = moment(currentDate, 'MM/DD/YYYY').format('DD/MM/YYYY');
     return formattedDate;
 }
