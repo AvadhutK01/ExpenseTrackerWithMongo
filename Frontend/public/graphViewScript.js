@@ -34,7 +34,7 @@ function formatData(data, Type) {
 
     data.forEach(item => {
         const { Amount, sourceType, type } = item;
-        const amount = parseInt(Amount);
+        const amount = parseInt(Amount.$numberDecimal);
         if (type === Type) {
             if (sumBySourceType[sourceType]) {
                 sumBySourceType[sourceType] += amount;
