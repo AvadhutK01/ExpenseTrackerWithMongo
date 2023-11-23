@@ -1,22 +1,22 @@
-const { Sequelize } = require("sequelize");
-const sequelize = require("../dbConnection");
-const DurlDb = sequelize.define('DurlData', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
+const { default: mongoose } = require("mongoose");
+const Schema = mongoose.Schema;
+const UrlSchema = new Schema({
     date: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: String,
+        requried: true
     },
     type: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: String,
+        requried: true
     },
     fileUrl: {
-        type: Sequelize.TEXT,
+        type: String,
         allowNull: false
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Users',
+        required: true
     }
-});
-module.exports = DurlDb;
+})
+module.exports = mongoose.model('UrlData', UrlSchema)

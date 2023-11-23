@@ -3,7 +3,7 @@ const userDb = require('../Models/userModel');
 const moneyData = require('../Models/moneyModel');
 const XLSX = require('xlsx');
 const { uploadToS3 } = require('../services/S3Services');
-// const DurlDb = require('../Models/filesDownloadUrlModel');
+const DurlDb = require('../Models/filesDownloadUrlModel');
 const yearlyReportDb = require('../Models/YearlyReportModel');
 exports.getExpenseMainHomePage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', '..', 'Frontend', "Views", "mainHome.html"));
@@ -117,8 +117,8 @@ exports.getExpensesData = async (req, res) => {
 
 exports.getYearlyExpensesData = async (req, res) => {
     try {
-        const id = req.user.id;
-        const result = await yearlyReportDb.findAll({ where: { userDatumId: id } });
+        const id = req.user._id;
+        const result = await yearlyReportDb.find({ userId: id });
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ data: err });
@@ -128,8 +128,8 @@ exports.getYearlyExpensesData = async (req, res) => {
 
 exports.getDownloadUrl = async (req, res) => {
     try {
-        const id = req.user.id;
-        const result = await DurlDb.findAll({ where: { userDatumId: id } });
+        const id = req.user._id;
+        const result = await DurlDb.find({ userId: id });
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ message: 'Internal Server Error' });
@@ -250,7 +250,7 @@ exports.getViewMonetaryPage = (req, res) => {
 }
 
 exports.downloadExpense = async (req, res) => {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const date = new Date().toLocaleString().replace(/\//g, '-');
     const downloadType = req.body.downloadType;
     let buffer;
@@ -297,10 +297,10 @@ exports.downloadExpense = async (req, res) => {
         fileName = `expense${userId}/Report_date-${date}.xlsx`;
     }
     else if (downloadType == 'All') {
-        const result = await moneyData.findAll({ where: { userDatumId: userId } });
+        const result = await moneyData.find({ userId: userId });
 
         function createDataArrayWithAllData(data) {
-            return data.map(item => [item.date, item.Amount, item.sourceType, item.description, item.type]);
+            return data.map(item => [item.date, item.Amount.toString(), item.sourceType, item.description, item.type]);
         }
 
         const allData = [
@@ -320,12 +320,13 @@ exports.downloadExpense = async (req, res) => {
             .then(async (fileUrl) => {
                 res.setHeader('Content-Disposition', 'attachment; filename=expense.xlsx');
                 res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                await DurlDb.create({
+                const Urldata = new DurlDb({
                     date: date,
                     fileUrl: fileUrl,
                     type: downloadType,
-                    userDatumId: userId
-                });
+                    userId: userId
+                })
+                await Urldata.save();
                 res.status(200).json({ fileUrl, success: true });
             })
             .catch(async (error) => {

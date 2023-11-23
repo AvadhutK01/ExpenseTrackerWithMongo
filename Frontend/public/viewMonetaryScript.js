@@ -100,7 +100,7 @@ async function displayData(data, tablebody, table, container, dataArray) {
             tr.appendChild(td1);
             let td2 = document.createElement("td");
             td2.id = "td2";
-            td2.appendChild(document.createTextNode(data[i].Amount));
+            td2.appendChild(document.createTextNode(data[i].Amount.$numberDecimal));
             tr.appendChild(td2);
             let td3 = document.createElement("td");
             td3.id = "td3";
@@ -117,7 +117,7 @@ async function displayData(data, tablebody, table, container, dataArray) {
             tablebody.appendChild(tr);
             dataArray.push({
                 date: data[i].date,
-                amount: data[i].Amount,
+                amount: data[i].Amount.$numberDecimal,
                 sourceType: data[i].sourceType,
                 description: data[i].description,
                 type: data[i].type
@@ -156,25 +156,25 @@ async function displayYearlyReport(data, tablebody, table, container, dataArray)
             tr.appendChild(td1);
             let td2 = document.createElement("td");
             td2.id = "td2";
-            td2.appendChild(document.createTextNode(data[i].TotalIncomme));
+            td2.appendChild(document.createTextNode(data[i].TotalIncomme.$numberDecimal));
             tr.appendChild(td2);
             let td3 = document.createElement("td");
             td3.id = "td3";
-            td3.appendChild(document.createTextNode(data[i].TotalExpense));
+            td3.appendChild(document.createTextNode(data[i].TotalExpense.$numberDecimal));
             tr.appendChild(td3);
             let td4 = document.createElement("td");
             td4.id = "td4";
-            td4.appendChild(document.createTextNode(data[i].Savings));
+            td4.appendChild(document.createTextNode(data[i].Savings.$numberDecimal));
             tr.appendChild(td4);
             tablebody.appendChild(tr);
-            totalIncome = totalIncome + parseInt(data[i].TotalIncomme);
-            totalExpense = totalExpense + parseInt(data[i].TotalExpense)
-            savings += parseInt(data[i].Savings);
+            totalIncome = totalIncome + parseInt(data[i].TotalIncomme.$numberDecimal);
+            totalExpense = totalExpense + parseInt(data[i].TotalExpense.$numberDecimal)
+            savings += parseInt(data[i].Savings.$numberDecimal);
             dataArray.push({
                 monthYear: `${monthName} ${year}`,
-                totalIncome: data[i].TotalIncomme,
-                totalExpense: data[i].TotalExpense,
-                savings: data[i].Savings
+                totalIncome: data[i].TotalIncomme.$numberDecimal,
+                totalExpense: data[i].TotalExpense.$numberDecimal,
+                savings: data[i].Savings.$numberDecimal
             });
         }
         totalSavingArray.push({
